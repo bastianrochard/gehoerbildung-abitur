@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<!-- iOS Web-App Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gehörbildung">
+<!-- Android/Chrome Web-App -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a1a24">
+<title>Gehörbildungstraining</title>
+<!-- Inline Web-App Manifest -->
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR2Vow7ZyYmlsZHVuZ3N0cmFpbmluZyIsInNob3J0X25hbWUiOiJHZWjDtnJiaWxkdW5nIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxYTFhMjQiLCJ0aGVtZV9jb2xvciI6IiMxYTFhMjQiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB2aWV3Qm94PScwIDAgNTEyIDUxMicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUzRSUzQ3JlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIGZpbGw9JyUyM0ZGRicgcng9JzgwJy8lM0UlM0NlbGxpcHNlIGN4PScyNTYnIGN5PScyOTUnIHJ4PSc1OCcgcnk9JzQ0JyB0cmFuc2Zvcm09J3JvdGF0ZSgtMjAgMjU2IDI5NSknIGZpbGw9JyUyM0M5QTg0QycvJTNFJTNDcmVjdCB4PScyOTYnIHk9JzYwJyB3aWR0aD0nMTYnIGhlaWdodD0nMjQwJyByeD0nNCcgZmlsbD0nJTIzQzlBODRDJy8lM0UlM0N0ZXh0IHg9JzI1NicgeT0nNDIwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmb250LWZhbWlseT0nR2VvcmdpYSxzZXJpZicgZm9udC1zaXplPSc0MicgZm9udC1zdHlsZT0naXRhbGljJyBmaWxsPSclMjNDOUE4NEMnJTNFR2Vow7ZyYmlsZHVuZyUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
+<!-- Inline SVG Icon für iOS -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='512' height='512' fill='%23FFF' rx='80'/%3E%3Cellipse cx='256' cy='295' rx='58' ry='44' transform='rotate(-20 256 295)' fill='%23C9A84C'/%3E%3Crect x='296' y='60' width='16' height='240' rx='4' fill='%23C9A84C'/%3E%3Ctext x='256' y='420' text-anchor='middle' font-family='Georgia,serif' font-size='42' font-style='italic' fill='%23C9A84C'%3EGehörbildung%3C/text%3E%3C/svg%3E">
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='512' height='512' fill='%23FFF' rx='80'/%3E%3Cellipse cx='256' cy='295' rx='58' ry='44' transform='rotate(-20 256 295)' fill='%23C9A84C'/%3E%3Crect x='296' y='60' width='16' height='240' rx='4' fill='%23C9A84C'/%3E%3C/svg%3E">
+<!-- Fonts mit Fallback -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- VexFlow für Notendarstellung -->
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold:#C9A84C; --gold-light:#E8D48B; --gold-dark:#9A7B2D;
+    /* Helleres, wärmeres Farbschema */
+    --bg-deep:#1a1a24; --bg-card:#252532; --bg-surface:#2d2d3d; --bg-hover:#38384a;
+    --text:#F4F1EA; --text-dim:#A8A4A0; --text-faint:#706C68;
+    --correct:#4CAF7C; --wrong:#E05555;
+    /* Akzentfarben für Tabs */
+    --accent-chords:#6B8E6B; --accent-intervals:#7B8EC9; --accent-rhythm:#C9A07B;
+  }
+  body {
+    min-height:100vh; min-height:100dvh; 
+    background:linear-gradient(165deg, #1e1e2a 0%, #252535 50%, #1a1a26 100%);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif; display:flex; flex-direction:column;
+    -webkit-tap-highlight-color:transparent; overflow-x:hidden; position:relative;
+  }
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% -10%,rgba(201,168,76,.12) 0%,transparent 50%),
+      radial-gradient(ellipse 80% 50% at 0% 100%,rgba(107,142,107,.08) 0%,transparent 40%),
+      radial-gradient(ellipse 80% 50% at 100% 100%,rgba(123,142,201,.08) 0%,transparent 40%);
+  }
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.3;
+    background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+  body>*{position:relative;z-index:1}
+
+  /* ── HEADER ── */
+  .header{
+    display:flex;justify-content:space-between;align-items:center;padding:24px 28px 18px;
+    background:linear-gradient(180deg,rgba(201,168,76,.08) 0%,rgba(201,168,76,.02) 100%);
+    border-bottom:1px solid rgba(201,168,76,.15);
+  }
+  .header h1{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--gold-light);letter-spacing:.02em;text-shadow:0 2px 12px rgba(201,168,76,.2)}
+  .header .sub{font-size:12px;color:var(--text-dim);font-style:italic;font-family:'Cormorant Garamond',serif;letter-spacing:.04em;line-height:1.5}
+  .sett-btn{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);color:var(--gold-light);padding:10px 18px;border-radius:10px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:600;transition:all .2s;backdrop-filter:blur(4px)}
+  .sett-btn:hover{background:rgba(201,168,76,.2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,168,76,.15)}
+
+  /* ── FANCY TABS ── */
+  .tab-bar{
+    display:flex;gap:6px;padding:12px 20px;
+    background:linear-gradient(180deg,rgba(255,255,255,.02) 0%,transparent 100%);
+    border-bottom:1px solid rgba(255,255,255,.05);
+  }
+  .tab{
+    flex:1;padding:14px 20px;text-align:center;cursor:pointer;
+    font-size:14px;font-weight:600;color:var(--text-dim);
+    border:none;border-radius:12px;
+    background:rgba(255,255,255,.03);
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+    font-family:inherit;
+    position:relative;overflow:hidden;
+  }
+  .tab::before{
+    content:'';position:absolute;inset:0;opacity:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%);
+    transition:opacity .3s;
+  }
+  .tab:hover::before{opacity:1}
+  .tab:hover{background:rgba(255,255,255,.06);color:var(--text);transform:translateY(-1px)}
+  .tab.active{
+    color:#fff;
+    box-shadow:0 4px 20px rgba(0,0,0,.3),0 0 30px rgba(201,168,76,.1);
+    transform:translateY(-2px);
+  }
+  .tab.active[data-module="chords"]{background:linear-gradient(135deg,var(--accent-chords),#4a6b4a)}
+  .tab.active[data-module="intervals"]{background:linear-gradient(135deg,var(--accent-intervals),#5a6b99)}
+  .tab.active[data-module="rhythm"]{background:linear-gradient(135deg,var(--accent-rhythm),#99805a)}
+
+  /* ── SETTINGS ── */
+  .settings{background:rgba(255,255,255,.02);border-bottom:1px solid rgba(201,168,76,.1);padding:0 28px;max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1),padding .4s}
+  .settings.open{max-height:900px;padding:22px 28px}
+  .sec{margin-bottom:18px}
+  .sec h3{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .chip{padding:7px 15px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);cursor:pointer;font-size:12px;font-family:inherit;font-weight:600;background:rgba(255,255,255,.04);color:var(--text-dim);transition:all .2s}
+  .chip.on{color:#fff;border-color:transparent;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+  .chip:hover{transform:translateY(-1px);background:rgba(255,255,255,.08)}
+  .range-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+  .range-row span{font-size:12px;color:var(--text-dim);min-width:200px}
+  .range-row strong{color:var(--gold-light)}
+  input[type=range]{flex:1;min-width:100px;accent-color:var(--gold);height:4px;-webkit-appearance:none;background:rgba(255,255,255,.1);border-radius:2px}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--gold-light),var(--gold));cursor:pointer;box-shadow:0 2px 8px rgba(201,168,76,.4)}
+
+  /* ── STATS ── */
+  .stats-bar{display:flex;align-items:center;gap:16px;padding:14px 28px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;color:var(--text-dim)}
+  .stats-bar .pct{color:var(--gold-light);font-weight:600}
+  .streak-display{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim)}
+  .streak-dots{display:flex;gap:5px}
+  .streak-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+  .streak-dot.filled{background:linear-gradient(135deg,var(--gold-light),var(--gold));border-color:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.5);animation:dotPop .4s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes dotPop{0%{transform:scale(.3)}100%{transform:scale(1)}}
+  .reset-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:11px;text-decoration:underline;font-family:inherit}
+
+  /* ── MAIN ── */
+  main{flex:1;display:flex;justify-content:center;align-items:center;padding:36px 28px}
+  .screen{text-align:center;max-width:640px;width:100%;display:none;animation:fadeUp .4s ease}
+  .screen.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .big-icon{font-size:80px;margin-bottom:20px;background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 12px rgba(201,168,76,.2))}
+  .hint{font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;color:var(--text-dim);margin-bottom:28px;font-style:italic}
+  .primary-btn{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--bg-deep);border:none;padding:14px 38px;border-radius:28px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 24px rgba(201,168,76,.3);transition:all .2s;letter-spacing:.02em;text-transform:uppercase}
+  .primary-btn:hover{transform:translateY(-2px);box-shadow:0 6px 30px rgba(201,168,76,.4)}
+  .primary-btn:active{transform:scale(.97)}
+  .primary-btn:disabled{opacity:.3;cursor:default;transform:none}
+  .ghost-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--text-dim);padding:9px 22px;border-radius:20px;cursor:pointer;font-size:12px;font-family:inherit;transition:all .2s;margin-bottom:24px}
+  .ghost-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+  .listen-icon{font-size:56px;margin-bottom:10px;transition:all .3s}
+  .listen-icon.playing{animation:pulse 1.2s ease infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  .listen-text{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text-dim);font-style:italic;margin-bottom:22px}
+  .answer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;width:100%;margin-top:6px}
+  .answer-grid.chord-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .answer-grid.interval-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .interval-col{display:flex;flex-direction:column;gap:6px;align-items:center;min-width:72px}
+  .interval-col-label{font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;font-family:'Cormorant Garamond',serif}
+  .chord-group-label{font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:4px 0 2px;font-family:'Cormorant Garamond',serif;grid-column:span 1}
+  .ans-btn{padding:12px 10px;border-radius:12px;border:2px solid;color:#fff;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:all .15s;position:relative;overflow:hidden;min-width:0;width:100%}
+  .ans-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 60%);pointer-events:none}
+  .ans-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+  .ans-btn:active{transform:scale(.96)}
+  .badge{display:inline-block;padding:14px 36px;border-radius:14px;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;margin-bottom:14px;color:#fff;animation:badgePop .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes badgePop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+  .reveal{font-size:16px;color:var(--text-dim);margin:8px 0}
+  .reveal strong{font-weight:700}
+  .note-info{font-size:12px;color:var(--text-faint);font-family:'DM Sans',monospace;margin:6px 0 28px;letter-spacing:.04em}
+  .result-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .warning{color:var(--wrong);font-size:12px;margin-top:12px}
+  .rhythm-slot{flex:1;min-width:60px;max-width:160px;min-height:90px;border:2px dashed rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--bg-surface);transition:all .2s;cursor:default;position:relative;overflow:hidden}
+  .rhythm-slot.empty span{color:var(--text-faint);font-size:24px;font-weight:300}
+  .rhythm-slot.filled{border-style:solid;border-color:var(--gold);cursor:pointer;background:#fff}
+  .rhythm-slot.filled:hover{background:#f5f0e0;border-color:var(--gold-light)}
+  .rhythm-slot.double{flex:2;max-width:300px}
+  .rhythm-slot .slot-x{position:absolute;top:3px;right:7px;font-size:10px;color:#999;opacity:0;transition:opacity .15s;z-index:2}
+  .rhythm-slot.filled:hover .slot-x{opacity:1}
+  .rhythm-palette-group{margin-bottom:10px}
+  .rhythm-palette-label{font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-family:'Cormorant Garamond',serif}
+  .rhythm-palette-row{display:flex;flex-wrap:wrap;gap:6px}
+  .rhythm-block{cursor:pointer;border:2px solid rgba(255,255,255,.08);border-radius:10px;padding:0;background:#fff;transition:all .15s;display:flex;align-items:center;justify-content:center;min-width:64px;min-height:72px;overflow:hidden}
+  .rhythm-block:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.3)}
+  .rhythm-block:active{transform:scale(.96)}
+  .rhythm-block.disabled{opacity:.3;pointer-events:none}
+  .hint-box{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.18);border-radius:12px;padding:14px 18px;margin:12px 0 8px;text-align:left;font-size:13px;line-height:1.7;color:var(--text-dim)}
+  .hint-box .hint-label{color:var(--gold);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+  .error-bar{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .error-bar-name{min-width:90px;font-weight:600;color:var(--text)}
+  .error-bar-track{flex:1;height:6px;background:var(--bg-hover);border-radius:3px;overflow:hidden}
+  .error-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+
+  /* ── REWARD ── */
+  .reward-overlay{position:fixed;inset:0;z-index:100;background:rgba(20,20,30,.85);backdrop-filter:blur(12px);display:none;justify-content:center;align-items:center}
+  .reward-overlay.show{display:flex;animation:overlayIn .3s ease}
+  @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+  .reward-card{background:linear-gradient(160deg,#2a2a38,#1e1e2a);border:1px solid rgba(201,168,76,.3);border-radius:24px;padding:40px 36px;text-align:center;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 100px rgba(201,168,76,.15);animation:cardIn .5s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes cardIn{0%{transform:scale(.6) translateY(40px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+  .reward-icon{font-size:64px;margin-bottom:16px}
+  .reward-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold-light);margin-bottom:8px}
+  .reward-sub{font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:8px}
+  .reward-level{font-size:12px;color:var(--gold-dark);font-weight:600;text-transform:uppercase;letter-spacing:.15em;margin-bottom:24px}
+  .reward-btn{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--bg-deep);border:none;padding:12px 32px;border-radius:24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+  .reward-btn:hover{transform:translateY(-1px)}
+  .confetti-container{position:fixed;inset:0;pointer-events:none;z-index:99;overflow:hidden}
+  .confetti-piece{position:absolute;width:10px;height:10px;top:-20px;animation:confettiFall linear forwards}
+  @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}80%{opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+  footer{display:flex;justify-content:center;align-items:center;gap:16px;padding:16px 28px;border-top:1px solid rgba(201,168,76,.1);font-size:11px;color:var(--text-dim);font-family:'Cormorant Garamond',serif;letter-spacing:.04em;background:rgba(255,255,255,.02)}
+  .info-btn{background:none;border:1px solid rgba(255,255,255,.15);color:var(--text-dim);padding:4px 12px;border-radius:12px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .2s}
+  .info-btn:hover{background:rgba(255,255,255,.05);color:var(--text)}
+  
+  /* Info Overlay */
+  .info-overlay{position:fixed;inset:0;z-index:100;background:rgba(20,20,30,.9);backdrop-filter:blur(12px);display:none;justify-content:center;align-items:center;padding:20px}
+  .info-overlay.show{display:flex;animation:overlayIn .3s ease}
+  .info-card{background:linear-gradient(160deg,#2a2a38,#1e1e2a);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:32px;text-align:center;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .info-card h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--gold-light);margin-bottom:20px}
+  .info-card p{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:12px;text-align:left}
+  .info-card a{color:var(--gold);text-decoration:none}
+  .info-card a:hover{text-decoration:underline}
+  .info-card strong{color:var(--text);font-weight:600}
+
+  /* ── iOS AUDIO SPLASH ── */
+  .audio-splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(165deg,#1e1e2a 0%,#252535 50%,#1a1a26 100%);display:flex;justify-content:center;align-items:center;transition:opacity .4s,visibility .4s}
+  .audio-splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .audio-splash-content{text-align:center;padding:40px}
+  .audio-splash-content h2{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;color:var(--gold-light);margin-bottom:12px}
+  .audio-splash-content p{font-size:14px;color:var(--text-dim);margin-bottom:28px}
+
+  /* ── UTILITY CLASSES (refactored from inline styles) ── */
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:4px;width:100%}
+  .chip-row-label{font-size:11px;color:var(--text-dim);min-width:70px;font-weight:600}
+  .chip-active{background:var(--gold-dark)!important;border-color:var(--gold-dark)!important}
+  .result-correct-div{margin:10px auto;max-width:500px;background:#fff;border-radius:12px;padding:10px}
+  .slot-render-div{pointer-events:none}
+  @media(max-width:500px){
+    .header h1{font-size:22px}
+    .header .sub{font-size:11px}
+    .tab{padding:12px 10px;font-size:13px}
+    .answer-grid.chord-grid{grid-template-columns:repeat(3,1fr);gap:6px}
+    .ans-btn{padding:10px 4px;font-size:11px}
+    .interval-col{min-width:60px}
+    .settings.open{max-height:900px}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div><h1>Gehörbildungstraining</h1><span class="sub">Akkorde | Intervalle | Rhythmus<br><span style="font-size:11px;opacity:0.8">In Anlehnung an die Anforderungen im fachpraktischen Abitur Musik in BW</span></span></div>
+  <button class="sett-btn" id="settingsToggle">⚙ Einstellungen</button>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab active" data-module="chords">Akkorde</button>
+  <button class="tab" data-module="intervals">Intervalle</button>
+  <button class="tab" data-module="rhythm">Rhythmus</button>
+</div>
+
+<div class="settings" id="settingsPanel">
+  <!-- Shared settings -->
+  <div class="sec"><h3>Tonumfang</h3>
+    <div class="range-row"><span>Tiefster Ton: <strong id="lowVal">C3</strong></span><input type="range" id="rangeLow" min="36" max="72" value="48"></div>
+    <div class="range-row"><span>Höchster Ton: <strong id="highVal">C5</strong></span><input type="range" id="rangeHigh" min="48" max="96" value="72"></div>
+  </div>
+  <div class="sec"><h3>Wiedergabe</h3>
+    <div class="chips" id="modeChips"></div>
+    <div class="range-row"><span>Tempo sukzessiv: <strong id="tempoVal">400 ms</strong></span><input type="range" id="tempoSlider" min="150" max="800" step="50" value="400"></div>
+  </div>
+  <!-- Module-specific settings -->
+  <div id="chordSettings">
+    <div class="sec"><h3>Akkordtypen</h3><div class="chips" id="chordChips"></div></div>
+  </div>
+  <div id="intervalSettings" style="display:none">
+    <div class="sec"><h3>Intervalle</h3><div class="chips" id="intervalChips"></div></div>
+  </div>
+  <div id="rhythmSettings" style="display:none">
+    <div class="sec"><h3>Rhythmus-Bausteine</h3><div class="chips" id="rhythmChips"></div></div>
+    <div class="sec"><h3>Tempo</h3>
+      <div class="range-row"><span>♩ = <strong id="bpmVal">60</strong> BPM</span><input type="range" id="bpmSlider" min="40" max="100" step="5" value="60"></div>
+    </div>
+  </div>
+  <div class="sec" id="errorStatsSection" style="display:none">
+    <h3>Schwächen-Analyse</h3>
+    <div id="errorStatsContent" style="font-size:12px;color:var(--text-dim);line-height:1.8"></div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <span id="statsText">✓ 0 / 0</span>
+  <span class="pct" id="statsPct"></span>
+  <button class="reset-btn" id="resetBtn" style="display:none">Reset</button>
+  <div class="streak-display">
+    <span id="starsDisplay" style="color:var(--gold);font-weight:600;margin-right:6px">⭐ 0</span>
+    <span id="streakLabel">Serie:</span>
+    <div class="streak-dots" id="streakDots"></div>
+  </div>
+</div>
+
+<!-- iOS Audio Splash Screen -->
+<div id="audioSplash" class="audio-splash">
+  <div class="audio-splash-content">
+    <div style="font-size:72px;margin-bottom:20px">♫</div>
+    <h2>Gehörbildungstraining</h2>
+    <p>Tippe zum Starten</p>
+    <button class="primary-btn" id="audioStartBtn">App starten</button>
+  </div>
+</div>
+
+<main>
+  <div class="screen active" id="idleScreen">
+    <div class="big-icon">♫</div>
+    <p class="hint">Wähle dein Trainingsmodul, stelle die Optionen ein<br>und trainiere dein Gehör.</p>
+    <button class="primary-btn" id="startBtn">Übung starten</button>
+    <p class="warning" id="startWarning" style="display:none">Mindestens 2 Einträge aktivieren</p>
+  </div>
+  <div class="screen" id="listenScreen">
+    <div class="listen-icon" id="listenIcon">🔊</div>
+    <p class="listen-text" id="listenText">Höre genau hin …</p>
+    <button class="ghost-btn" id="replayBtn">🔁 Nochmal abspielen</button>
+    <div class="answer-grid" id="answerGrid"></div>
+  </div>
+  <div class="screen" id="rhythmListenScreen">
+    <div class="listen-icon" id="rhythmListenIcon">🔊</div>
+    <p class="listen-text" id="rhythmListenText">Höre den Rhythmus …</p>
+    <button class="ghost-btn" id="rhythmReplayBtn">🔁 Nochmal abspielen</button>
+    <!-- Slot area: 4 slots for building the measure -->
+    <div id="rhythmSlotArea" style="display:flex;gap:8px;justify-content:center;align-items:stretch;margin-bottom:20px;min-height:70px">
+      <div class="rhythm-slot empty" data-slot="0"><span>?</span></div>
+      <div class="rhythm-slot empty" data-slot="1"><span>?</span></div>
+      <div class="rhythm-slot empty" data-slot="2"><span>?</span></div>
+      <div class="rhythm-slot empty" data-slot="3"><span>?</span></div>
+    </div>
+    <button class="primary-btn" id="rhythmCheckBtn" style="display:none;margin-bottom:18px" disabled>Prüfen</button>
+    <!-- Palette of beat blocks -->
+    <div id="rhythmPalette" style="width:100%;max-width:600px;margin:0 auto"></div>
+  </div>
+  <div class="screen" id="jokerScreen">
+    <div style="font-size:56px;margin-bottom:12px">🛡️</div>
+    <div class="badge" style="background:var(--wrong);animation:none;margin-bottom:16px">✗ Falsch!</div>
+    <p style="font-size:16px;color:var(--text-dim);margin-bottom:6px">Deine Serie steht bei <strong id="jokerStreakVal" style="color:var(--gold)">0</strong>.</p>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:24px">Joker einsetzen? Kostet 1 ⭐ – du kannst nochmal hören und erneut antworten.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <button class="primary-btn" id="useJokerBtn" style="font-size:13px;padding:12px 28px">⭐ Joker einsetzen</button>
+      <button class="ghost-btn" id="declineJokerBtn" style="margin-bottom:0">Ohne Joker weiter</button>
+    </div>
+  </div>
+  <div class="screen" id="resultScreen">
+    <div class="badge" id="resultBadge"></div>
+    <p class="reveal" id="resultReveal"></p>
+    <div class="hint-box" id="hintBox" style="display:none"></div>
+    <p class="note-info" id="resultNotes"></p>
+    <div class="result-actions">
+      <button class="ghost-btn" id="replayResult">🔁 Nochmal hören</button>
+      <button class="primary-btn" id="nextBtn">Weiter</button>
+    </div>
+  </div>
+</main>
+
+<div class="reward-overlay" id="rewardOverlay">
+  <div class="reward-card">
+    <div class="reward-icon" id="rewardIcon">🏆</div>
+    <div class="reward-title" id="rewardTitle"></div>
+    <div class="reward-sub" id="rewardSub"></div>
+    <div class="reward-level" id="rewardLevel"></div>
+    <button class="reward-btn" id="rewardClose">Weiter üben</button>
+  </div>
+</div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- Info-Dialog -->
+<div class="info-overlay" id="infoOverlay">
+  <div class="info-card">
+    <h2>Gehörbildungstraining</h2>
+    <p><strong>Entwickelt von:</strong><br>Bastian Rochard<br><a href="mailto:bastian@posteo.de">bastian@posteo.de</a></p>
+    <p><strong>Erstellt mit:</strong><br>Claude AI · Web Audio Synthese</p>
+    <p style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)"><strong>Datenschutz:</strong><br>Diese App speichert deine Einstellungen (aktive Akkorde, Intervalle, Bausteine, Tempo) nur lokal auf deinem Gerät im Browser-Speicher (localStorage). Es werden keine Daten an Server übertragen.</p>
+    <button class="primary-btn" onclick="document.getElementById('infoOverlay').classList.remove('show')" style="margin-top:20px">Schließen</button>
+  </div>
+</div>
+
+<footer>
+  <span>Bastian Rochard · Web Audio Synthese</span>
+  <button class="info-btn" onclick="document.getElementById('infoOverlay').classList.add('show')">ℹ Info</button>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SHARED CORE – Audio, Gamification, UI
+   ═══════════════════════════════════════════════ */
+const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const midiToFreq=m=>440*Math.pow(2,(m-69)/12);
+const midiToName=m=>NOTE_NAMES[m%12]+(Math.floor(m/12)-1);
+
+let audioCtx=null, sharedConvolver=null;
+let activeNodes=[]; // track all playing nodes for stop
+
+function getAudioCtx(){
+  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==="suspended")audioCtx.resume();
+  return audioCtx;
+}
+
+// ══ ROBUSTER iOS/Safari AUDIO-FIX ══
+// Safari blockiert Audio bis zu einer User-Interaktion.
+// Dieser Fix entsperrt Audio bei JEDEM Tap/Click bis es funktioniert.
+let audioUnlocked=false;
+function unlockAudio(){
+  if(audioUnlocked)return Promise.resolve();
+  return new Promise(resolve=>{
+    const ctx=getAudioCtx();
+    // Mehrere Methoden gleichzeitig für maximale Kompatibilität
+    // 1. Stiller Buffer abspielen
+    const buf=ctx.createBuffer(1,1,ctx.sampleRate);
+    const src=ctx.createBufferSource();
+    src.buffer=buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    // 2. Oscillator kurz anspielen
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    gain.gain.value=0.001; // fast unhörbar
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime+0.001);
+    // 3. Context resume
+    if(ctx.state==="suspended"){
+      ctx.resume().then(()=>{
+        audioUnlocked=true;
+        resolve();
+      });
+    }else{
+      audioUnlocked=true;
+      resolve();
+    }
+  });
+}
+
+// Bei JEDEM Touch/Click versuchen zu entsperren (nicht nur once)
+function tryUnlock(){
+  if(!audioUnlocked)unlockAudio();
+}
+document.addEventListener("touchstart",tryUnlock,{passive:true});
+document.addEventListener("touchend",tryUnlock,{passive:true});
+document.addEventListener("click",tryUnlock);
+
+// Zusätzlich: Vor dem ersten Abspielen nochmal sicherstellen
+async function ensureAudioReady(){
+  if(!audioUnlocked)await unlockAudio();
+  const ctx=getAudioCtx();
+  if(ctx.state==="suspended")await ctx.resume();
+  return ctx;
+}
+
+function getConvolver(ctx){
+  if(!sharedConvolver){
+    const c=ctx.createConvolver(),r=ctx.sampleRate,l=r*2,imp=ctx.createBuffer(2,l,r);
+    for(let ch=0;ch<2;ch++){const d=imp.getChannelData(ch);for(let i=0;i<l;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/l,2.2);}
+    c.buffer=imp;c.connect(ctx.destination);sharedConvolver=c;
+  }return sharedConvolver;
+}
+
+function createPianoNote(ctx,freq,st,dur,vol,dry){
+  dur=dur||2.2; vol=vol||1; const now=st;
+  const master=ctx.createGain();
+  master.gain.setValueAtTime(0,now);
+  master.gain.linearRampToValueAtTime(vol,now+.008);
+  master.gain.setTargetAtTime(vol*.6,now+.008,.07);
+  master.gain.setTargetAtTime(vol*.28,now+.12,.45);
+  master.gain.setTargetAtTime(.0001,now+dur*.7,dur*.2);
+  const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.Q.value=.7;
+  lp.frequency.setValueAtTime(Math.min(freq*10,14000),now);
+  lp.frequency.exponentialRampToValueAtTime(Math.min(freq*3,5000),now+.25);
+  lp.frequency.exponentialRampToValueAtTime(Math.min(freq*1.8,2500),now+dur*.5);
+  master.connect(lp);
+  const dr=ctx.createGain();dr.gain.value=dry?1:.88;dr.connect(ctx.destination);
+  if(!dry){const wt=ctx.createGain();wt.gain.value=.08;wt.connect(getConvolver(ctx));lp.connect(wt);}
+  lp.connect(dr);
+  const b=Math.max(.15,1-(freq-180)/2000);
+  const oscs=[];
+  [{x:1,a:.36,t:"triangle"},{x:2,a:.13*b,t:"sine"},{x:3,a:.06*b,t:"sine"},
+   {x:4,a:.025*b,t:"sine"},{x:5,a:.012*b,t:"sine"},
+   {x:1.001,a:.09,t:"sine"},{x:.9992,a:.09,t:"sine"}].forEach(h=>{
+    const o=ctx.createOscillator();o.type=h.t;o.frequency.value=freq*h.x;
+    const g=ctx.createGain();g.gain.value=h.a;o.connect(g);g.connect(master);o.start(now);o.stop(now+dur+.1);
+    oscs.push(o);
+  });
+  // Hammer noise burst – skip for rhythm (dry) to keep notes clean
+  if(!dry){
+    const bl=Math.floor(ctx.sampleRate*.05),nb=ctx.createBuffer(1,bl,ctx.sampleRate),nd=nb.getChannelData(0);
+    for(let i=0;i<bl;i++)nd[i]=Math.random()*2-1;
+    const ns=ctx.createBufferSource();ns.buffer=nb;
+    const nf=ctx.createBiquadFilter();nf.type="bandpass";nf.frequency.value=Math.min(freq*3,8000);nf.Q.value=1;
+    const ng=ctx.createGain();ng.gain.setValueAtTime(.1,now);ng.gain.exponentialRampToValueAtTime(.001,now+.04);
+    ns.connect(nf);nf.connect(ng);ng.connect(master);ns.start(now);ns.stop(now+.05);
+  }
+  // Store for stop
+  activeNodes.push({oscs,master});
+  return {oscs,master};
+}
+
+// ── STOP ALL SOUND ──
+function stopAllSound(){
+  const ctx=audioCtx;if(!ctx)return;
+  const now=ctx.currentTime;
+  const toStop=activeNodes.slice(); // copy
+  activeNodes=[];
+  toStop.forEach(n=>{
+    try{
+      n.master.gain.cancelScheduledValues(now);
+      n.master.gain.setValueAtTime(0.001,now);
+      n.master.gain.exponentialRampToValueAtTime(0.0001,now+0.05);
+      n.oscs.forEach(o=>{try{o.stop(now+0.06)}catch(e){}});
+    }catch(e){}
+  });
+  clearT();
+  isPlaying=false;
+  updateLUI();
+}
+
+// ── FEEDBACK SOUNDS ──
+function playPling(){
+  const ctx=getAudioCtx(),now=ctx.currentTime;
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type="sine";o.frequency.setValueAtTime(1200,now);o.frequency.exponentialRampToValueAtTime(1800,now+.08);
+  g.gain.setValueAtTime(.25,now);g.gain.exponentialRampToValueAtTime(.001,now+.3);
+  o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.3);
+  // second harmonic
+  const o2=ctx.createOscillator(),g2=ctx.createGain();
+  o2.type="sine";o2.frequency.value=2400;
+  g2.gain.setValueAtTime(.08,now);g2.gain.exponentialRampToValueAtTime(.001,now+.2);
+  o2.connect(g2);g2.connect(ctx.destination);o2.start(now);o2.stop(now+.2);
+}
+function playBuzz(){
+  const ctx=getAudioCtx(),now=ctx.currentTime;
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type="sawtooth";o.frequency.setValueAtTime(110,now);o.frequency.linearRampToValueAtTime(80,now+.4);
+  g.gain.setValueAtTime(.18,now);g.gain.linearRampToValueAtTime(.15,now+.25);g.gain.exponentialRampToValueAtTime(.001,now+.5);
+  const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=300;lp.Q.value=1;
+  o.connect(lp);lp.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.5);
+}
+
+let pendingTimeouts=[];
+function clearT(){pendingTimeouts.forEach(t=>clearTimeout(t));pendingTimeouts=[];}
+
+let isPlaying=false;
+async function playNotes(midi,mode){
+  stopAllSound();
+  const ctx=await ensureAudioReady(); // iOS-Fix: Audio sicherstellen
+  const now=ctx.currentTime+.05;
+  const tempo=+document.getElementById("tempoSlider").value,gap=tempo/1000;
+  isPlaying=true;updateLUI();
+  if(mode==="successive"||mode==="both-successive"){
+    midi.forEach((n,i)=>createPianoNote(ctx,midiToFreq(n),now+i*gap,2.2));
+    if(mode==="both-successive"){
+      const p=1.4,ss=now+midi.length*gap+p;
+      midi.forEach(n=>createPianoNote(ctx,midiToFreq(n),ss,2.5));
+      pendingTimeouts.push(setTimeout(()=>{isPlaying=false;updateLUI();},(midi.length*gap+p+2.5)*1000));
+    }else pendingTimeouts.push(setTimeout(()=>{isPlaying=false;updateLUI();},((midi.length-1)*gap+2.2)*1000));
+  }else{
+    midi.forEach(n=>createPianoNote(ctx,midiToFreq(n),now,2.5));
+    pendingTimeouts.push(setTimeout(()=>{isPlaying=false;updateLUI();},2500));
+  }
+}
+
+// ── GAMIFICATION ──
+const REWARDS=[
+  {at:7,icon:"⭐",title:"Stern verdient!",sub:"7 in Folge – du erhältst einen Stern!",level:"Weiter so!"},
+  {at:14,icon:"🌟",title:"Doppelstern!",sub:"14er-Serie! Noch ein Stern.",level:"Goldenes Ohr"},
+  {at:21,icon:"👑",title:"Dreifachstern!",sub:"21 in Folge – Respekt!",level:"Virtuose"},
+  {at:28,icon:"💎",title:"Vierfachstern!",sub:"28er-Serie!",level:"Absolutes Gehör"},
+];
+let stats={correct:0,total:0},streak=0,stars=0;
+let jokerWrongAnswer=null;
+
+// ── ERROR TRACKING ──
+let errorCount={chords:{},intervals:{},rhythm:{}};   // key → total wrong count
+let confusionLog={chords:{},intervals:{},rhythm:{}}; // "correct→chosen" → count
+
+function logError(correctKey, chosenKey){
+  const mod=currentModule;
+  errorCount[mod][correctKey]=(errorCount[mod][correctKey]||0)+1;
+  const pair=correctKey+"→"+chosenKey;
+  confusionLog[mod][pair]=(confusionLog[mod][pair]||0)+1;
+}
+
+function getWeightedRandomKey(keys){
+  // Weight: base 1 + 2 per error on that key (so wrong items appear ~3x more often)
+  const mod=currentModule;
+  const weights=keys.map(k=>1+(errorCount[mod][k]||0)*2);
+  const total=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total;
+  for(let i=0;i<keys.length;i++){
+    r-=weights[i];
+    if(r<=0)return keys[i];
+  }
+  return keys[keys.length-1];
+}
+
+// ── CONFUSION HINTS (CHORDS) ──
+const CHORD_HINTS={
+  "dur→moll":"Beide haben eine reine Quinte, aber die Terz unterscheidet sie: Dur hat eine große Terz (4 Halbtöne, klingt hell, fröhlich), Moll eine kleine Terz (3 Halbtöne, klingt dunkel/weich). Versuche, dich auf den zweiten Ton von unten zu konzentrieren und auf den Gesamtklang.",
+  "moll→dur":"Der Dreiklang klang heller als du dachtest! Bei Dur ist die Terz groß (4 Halbtöne) – das gibt den hellen, strahlenden Charakter. Moll hat eine kleine Terz und klingt dunkler, weicher. (Liedanfang: Kumbayah my lord)",
+  "d7→dmaj7":"Beide haben einen Dur-Dreiklang als Basis, aber die Septime unterscheidet sie: D7 hat eine kleine Septime (10 HT, klingt spannungsreich, drängt abwärts zur Auflösung), Dmaj7 hat eine große Septime (11 HT, klingt ruhig, schwebend, jazzig). Hör auf den obersten Ton!",
+  "dmaj7→d7":"Beide haben Dur unten, aber der oberste Ton war tiefer als gedacht: Die kleine Septime (D7) klingt spannungsreich, möchte sich abwärts auflösen (wie bei The winner takes it all), die große Septime (Dmaj7) schwebt friedlich.",
+  "d7→dur":"Bei Dur hörst du nur drei verschiedene Töne (+ Oktave). D7 fügt eine kleine Septime hinzu – ein vierter, etwas dissonanter Ton oben. Achte darauf, ob der Klang stabil klingt (Dur) oder nach Auflösung strebt (D7).",
+  "dur→d7":"Das war ein reiner Dur-Dreiklang (+ Oktave), ohne den spannungsreichen Septimton. D7 hätte oben noch einen zusätzlichen Ton, der zur Auflösung drängt.",
+  "m7→moll":"Moll hat nur den Dreiklang (+ Oktave), m7 fügt eine kleine Septime hinzu. Hör, ob oben ein vierter, verschiedener Ton den Klang jazzig färbt – dann ist es m7.",
+  "moll→m7":"Das war reines Moll (+ Oktave). Der m7-Akkord hätte oben noch die kleine Septime, die dem Klang eine weichere, jazzige Färbung gibt.",
+  "m7→d7":"Beide haben eine kleine Septime oben! Der Unterschied liegt im Dreiklang: m7 hat Moll unten (dunkel), D7 hat Dur unten (hell) und klingt dominantisch, will sich also auflösen. Konzentriere dich aber vor allem auf den Grundcharakter der unteren drei Töne.",
+  "d7→m7":"Beide haben eine kleine Septime, aber der Dreiklang darunter unterscheidet sie: D7 basiert auf Dur (hell, strahlend), m7 auf Moll (dunkel, weich). Hör auf die Terz!",
+  "d56→m56":"Beide haben Quinte und Sexte, aber die Terz ist verschieden: Dur 5/6 hat eine große Terz (hell), Moll 5/6 eine kleine Terz (dunkel). Achte auf den zweiten Ton von unten.",
+  "m56→d56":"Gleiche Struktur, aber die Terz verrät es: Dur 5/6 klingt unten hell (große Terz), Moll 5/6 klingt unten dunkler (kleine Terz).",
+  "d56→d7":"Beide haben einen Dur-Dreiklang als Basis. Aber Dur 5/6 hat eine große Sexte (ein Ganzton über der Quinte), D7 hat eine kleine Septime. Die Sexte klingt heller und konsonanter als die drängende Septime.",
+  "d7→d56":"Dur unten stimmt – aber oben ist der Unterschied: Die große Sexte (Dur 5/6) klingt hell und ruhig, die kleine Septime (D7) drängt zur Auflösung.",
+  "verm7→moll":"Der verminderte Septakkord besteht nur aus kleinen Terzen (alle 3 HT). Das ergibt einen gleichmäßig engen, spannungsreichen Klang. Moll hat eine kleine Terz unten, aber eine reine Quinte – das klingt voller und stabiler.",
+  "moll→verm7":"Moll klingt zwar dunkel, aber stabil durch die reine Quinte. Der verminderte Septakkord ist enger und instabiler – alle Abstände sind gleich (kleine Terzen), das erzeugt eine starke Spannung.",
+  "ueber→dur":"Beide haben eine große Terz unten, aber der übermäßige Dreiklang hat eine übermäßige Quinte. Das klingt offen, schwebend. Dur hat die reine Quinte und klingt stabil.",
+  "dur→ueber":"Die große Terz stimmt, aber die Quinte war hier rein, nicht übermäßig. Der übermäßige Dreiklang hätte einen schwebenden, offenen Charakter.",
+  "dmaj7→m7":"Beide klingen weich und leicht jazzig – aber achte beim sukzessiven Hören immer besonders auf die drei ersten Töne: Bei Dmaj7 bilden die Töne 1, 2, 3 einen Dur-Dreiklang, die Töne 2, 3, 4 aber einen Molldreiklang, das kann verwirren! Bei m7 bilden die oberen drei Töne einen Dur-Dreiklang. Insgesamt ist Dmaj7 unten Dur + oben Moll, m7 genau umgekehrt.",
+  "m7→dmaj7":"Beide klingen weich und jazzig, aber hör genau auf die Dreiklänge, die im Akkord stecken: Bei m7 bilden die oberen drei Töne (2/3/4) einen Dur-Dreiklang – beim sukzessiven Hören endet es also hell. Bei Dmaj7 bilden die oberen drei Töne einen Moll-Dreiklang – es endet dunkel. Merke: m7 = unten Moll, oben Dur. Dmaj7 = unten Dur, oben Moll. Das ist eine typische Fehlerquelle!",
+  "m7→m56":"Beide haben Moll unten und eine reine Quinte – der Unterschied liegt im obersten Ton: m7 hat die kleine Septime (10 HT, klingt leicht drängend, jazzig), Moll 5/6 hat die große Sexte (9 HT, klingt ruhiger, konsonanter). Achte darauf, ob über der Quinte eine Sekunde oder eine Terz erklingt.",
+  "m56→m7":"Beide basieren auf Moll mit Quinte. Moll 5/6 hat die große Sexte (9 HT), die ruhig und warm klingt. m7 hat die kleine Septime (10 HT), klingt leicht jazzig.",
+  "verm7→ueber":"Beide Akkorde sind symmetrisch aufgebaut, klingen aber völlig verschieden: Der verminderte Septakkord besteht nur aus kleinen Terzen (je 3 HT) – das ergibt einen engen, spannungsreichen Klang. Der übermäßige Dreiklang besteht nur aus großen Terzen (je 4 HT) – das klingt weit, hell und schwebend.",
+  "ueber→verm7":"Beide sind symmetrische Akkorde, aber mit gegensätzlichem Charakter: Übermäßig = nur große Terzen (4 HT), klingt weit, hell, schwebend. Vermindert = nur kleine Terzen (3 HT), klingt eng, dunkel, gespannt. Achte auf die Grundstimmung: hell-schwebend oder dunkel-drängend?",
+};
+
+// ── CONFUSION HINTS (INTERVALS) ──
+const INTERVAL_HINTS={
+  "kl2→gr2":"Die kleine Sekunde ist extrem dissonant. Denke an den Halbtonschritt h-c.",
+  "gr2→kl2":"Die große Sekunde (2 HT) klingt wie ein normaler Schritt in einer Tonleiter. Liedanfang: Alle meine Entchen.",
+  "kl3→gr3":"Kleine Terz, wie beim Molldreiklang.",
+  "gr3→kl3":"Die große Terz klingt hell und freundlich, die kleine Terz dunkler und weicher. Stell dir vor, du ergänzt den Ton zu einem Dreiklang – Dur oder Moll?",
+  "r4→r5":"Die Quarte ist ein Signalintervall, z.B. beim Martinshorn, oder als Anfang vieler Lieder (Oh Tannenbaum, Ein Männlein steht im Walde, Im Frühtau zu Berge, Kleine Nachtmusik).",
+  "r5→r4":"Die Quinte klingt weit und stabil – wie ein leerer Rahmen. Tipps: Star Wars Anfang, Universal-Theme.",
+  "r4→tri":"Die reine Quarte klingt offen und rein. Der Tritonus hat eine starke Spannung und Unruhe – er will sich auflösen. Nur 1 Halbton Unterschied, aber ein ganz anderer Charakter!",
+  "tri→r4":"Der Tritonus klingt spannungsreich und instabil. Die reine Quarte ist offener und ruhiger. Achte auf die innere Spannung des Klangs.",
+  "tri→r5":"Der Tritonus klingt instabil und gespannt, die Quinte weit und stabil. Nur 1 Halbton Unterschied, aber die Quinte hat Ruhe und ist stabil, der Tritonus hat Drang.",
+  "r5→tri":"Die Quinte klingt stabil und leer im positiven Sinne. Der Tritonus hätte mehr Spannung und Unruhe. Achte auf das Gefühl der Stabilität.",
+  "kl6→gr6":"Die kleine Sexte hat einen leicht melancholischen Klang, die große Sexte klingt wärmer und freundlicher. Lied: When Israel was in Egypts Land (Go down Moses).",
+  "gr6→kl6":"Die große Sexte klingt warm und freundlich, die kleine Sexte hat einen melancholischeren Touch. My bonnie is over the Ocean.",
+  "kl7→gr7":"Beide sind Septimen: Die kleine Septime (10 HT) klingt jazzig-weich und nach Auflösung. Die große Septime (11 HT) klingt schärfer, fast dissonant, fast wie eine Oktave die knapp daneben ist.",
+  "gr7→kl7":"Die große Septime (11 HT) klingt scharf und nah an der Oktave – ziemlich dissonant. Die kleine Septime (10 HT) ist weniger scharf aber dennoch dissonant.",
+  "kl6→r5":"Die kleine Sexte (8 HT) ist nur 1 Halbton weiter als die Quinte (7 HT). Die Quinte klingt leer und stabil, die kleine Sexte fügt eine melancholische Färbung hinzu.",
+  "r5→kl6":"Die Quinte (7 HT) klingt stabil und leer. Die kleine Sexte (8 HT) wäre etwas weiter und hätte einen weicheren, melancholischeren, leicht leidenden Klang.",
+  "gr6→kl7":"Die große Sexte (9 HT) klingt warm und konsonant, die kleine Septime (10 HT) dissonant (The winner takes it all).",
+  "kl7→gr6":"Die kleine Septime (10 HT) möchte sich nach unten auflösen, die große Sexte (9 HT) ist etwas enger und wärmer. Tipp: Septimen wollen sich auflösen, Sexten ruhen eher in sich und sind konsonant.",
+  "oktave→r5":"Die Oktave (12 HT) klingt wie derselbe Ton, nur höher – perfekte Verschmelzung. Die Quinte (7 HT) ist deutlich enger und hat einen offenen, leeren Klang.",
+  "r5→oktave":"Die Quinte (7 HT) ist ein weites, aber offenes Intervall. Die Oktave (12 HT) verschmilzt fast vollständig – der obere Ton klingt wie eine Wiederholung des unteren. Wenn Streichinstrumente stimmen, erklingt dieses Intervall.",
+};
+
+function getHint(correctKey, chosenKey){
+  const hints=currentModule==="chords"?CHORD_HINTS:INTERVAL_HINTS;
+  return hints[correctKey+"→"+chosenKey] || hints[chosenKey+"→"+correctKey] || null;
+}
+
+// ── ERROR STATS DISPLAY ──
+function updateErrorStats(){
+  const mod=currentModule;
+  const sec=document.getElementById("errorStatsSection");
+  const content=document.getElementById("errorStatsContent");
+  const errors=errorCount[mod]||{};
+  const keys=Object.keys(errors).filter(k=>errors[k]>0).sort((a,b)=>errors[b]-errors[a]);
+  if(!keys.length){sec.style.display="none";return;}
+  sec.style.display="";
+  const maxErr=Math.max(...keys.map(k=>errors[k]));
+  let html="";
+  keys.forEach(k=>{
+    const item=getItemData(k);
+    const pct=Math.round(errors[k]/maxErr*100);
+    const col=item?item.color:"var(--wrong)";
+    html+='<div class="error-bar"><span class="error-bar-name">'+(item?item.name:k)+'</span>';
+    html+='<div class="error-bar-track"><div class="error-bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div>';
+    html+='<span style="min-width:24px;text-align:right">'+errors[k]+'×</span></div>';
+    const cLog=confusionLog[mod]||{};
+    const confusions=Object.keys(cLog).filter(p=>p.startsWith(k+"→")).sort((a,b)=>cLog[b]-cLog[a]);
+    if(confusions.length){
+      const top=confusions[0].split("→")[1];
+      const topItem=getItemData(top);
+      if(topItem)html+='<div style="font-size:11px;color:var(--text-faint);margin:0 0 6px 98px">häufig verwechselt mit '+topItem.name+'</div>';
+    }
+  });
+  content.innerHTML=html;
+} // stores the wrong answer key during joker flow
+
+function launchConfetti(){
+  const c=document.getElementById("confettiContainer"),cols=["#C9A84C","#E8D48B","#E07A5F","#4A6FA5","#3D8B5E","#7B2D8B","#fff"];
+  for(let i=0;i<60;i++){
+    const p=document.createElement("div");p.className="confetti-piece";
+    const s=6+Math.random()*8;p.style.width=s+"px";p.style.height=s+"px";
+    p.style.left=Math.random()*100+"%";p.style.background=cols[Math.floor(Math.random()*cols.length)];
+    p.style.borderRadius=Math.random()>.5?"50%":"2px";
+    p.style.animationDuration=(2+Math.random()*2)+"s";p.style.animationDelay=Math.random()*.8+"s";
+    c.appendChild(p);
+  }setTimeout(()=>{c.innerHTML="";},5000);
+}
+function checkReward(){
+  if(streak>0 && streak%7===0){
+    stars++;
+    updateStars();
+    launchConfetti();
+    const r=REWARDS.find(r=>r.at===streak)||{icon:"⭐",title:"Stern verdient!",sub:streak+" in Folge!",level:"Weiter sammeln!"};
+    document.getElementById("rewardIcon").textContent=r.icon;
+    document.getElementById("rewardTitle").textContent=r.title;
+    document.getElementById("rewardSub").textContent=r.sub;
+    document.getElementById("rewardLevel").textContent="Du hast jetzt "+stars+" ⭐";
+    document.getElementById("rewardOverlay").classList.add("show");
+  }
+}
+function updateStars(){
+  document.getElementById("starsDisplay").textContent="⭐ "+stars;
+}
+function updateStats(){
+  document.getElementById("statsText").textContent="✓ "+stats.correct+" / "+stats.total;
+  document.getElementById("statsPct").textContent=stats.total?Math.round(stats.correct/stats.total*100)+"%":"";
+  document.getElementById("resetBtn").style.display=stats.total?"":"none";
+}
+function updateStreak(){
+  const d=document.getElementById("streakDots");d.innerHTML="";
+  // Punkt 4: Lesbarere Logik für gefüllte Dots
+  const filled=(streak%7===0 && streak>0)?7:streak%7;
+  for(let i=0;i<7;i++){
+    const dot=document.createElement("div");dot.className="streak-dot";
+    if(i<filled)dot.classList.add("filled");
+    d.appendChild(dot);
+  }
+  document.getElementById("streakLabel").textContent=streak?"Serie: "+streak:"Serie:";
+}
+
+// ── UI SHARED ──
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const el=document.getElementById(id);void el.offsetWidth;el.classList.add("active");
+}
+function updateLUI(){
+  const ic=document.getElementById("listenIcon");
+  ic.textContent=isPlaying?"🔊":"👂";ic.classList.toggle("playing",isPlaying);
+  document.getElementById("listenText").textContent=isPlaying?"Höre genau hin …":"Was hörst du?";
+}
+
+/* ═══════════════════════════════════════════════
+   MODULE: AKKORDE
+   ═══════════════════════════════════════════════ */
+const CHORDS={
+  dur:{name:"Dur",intervals:[0,4,7,12],color:"#2D6A4F",group:"dur"},
+  d7:{name:"D7",intervals:[0,4,7,10],color:"#C44536",group:"dur"},
+  dmaj7:{name:"Dmaj7",intervals:[0,4,7,11],color:"#E07A5F",group:"dur"},
+  d56:{name:"Dur 5/6",intervals:[0,4,7,9],color:"#6D597A",group:"dur"},
+  moll:{name:"Moll",intervals:[0,3,7,12],color:"#4A6FA5",group:"moll"},
+  m7:{name:"m7",intervals:[0,3,7,10],color:"#3D5A80",group:"moll"},
+  m56:{name:"Moll 5/6",intervals:[0,3,7,9],color:"#457B9D",group:"moll"},
+  verm7:{name:"Verm. 7",intervals:[0,3,6,9],color:"#7B2D8B",group:"sonder"},
+  ueber:{name:"Übermäßig",intervals:[0,4,8,12],color:"#B5651D",group:"sonder"},
+};
+let activeChords={};Object.keys(CHORDS).forEach(k=>activeChords[k]=true);
+
+/* ═══════════════════════════════════════════════
+   MODULE: INTERVALLE
+   ═══════════════════════════════════════════════ */
+const INTERVALS={
+  prime:  {name:"Prime",        semitones:0,  color:"#5C6B73",col:"Prime",row:0},
+  kl2:    {name:"kl. Sekunde",  semitones:1,  color:"#C44536",col:"Sekunde",row:1},
+  gr2:    {name:"gr. Sekunde",  semitones:2,  color:"#E07A5F",col:"Sekunde",row:0},
+  kl3:    {name:"kl. Terz",     semitones:3,  color:"#4A6FA5",col:"Terz",row:1},
+  gr3:    {name:"gr. Terz",     semitones:4,  color:"#2D6A4F",col:"Terz",row:0},
+  r4:     {name:"r. Quarte",    semitones:5,  color:"#457B9D",col:"Quarte",row:0},
+  tri:    {name:"Tritonus",     semitones:6,  color:"#7B2D8B",col:"Tritonus",row:0},
+  r5:     {name:"r. Quinte",    semitones:7,  color:"#3D5A80",col:"Quinte",row:0},
+  kl6:    {name:"kl. Sexte",    semitones:8,  color:"#B5651D",col:"Sexte",row:1},
+  gr6:    {name:"gr. Sexte",    semitones:9,  color:"#6D597A",col:"Sexte",row:0},
+  kl7:    {name:"kl. Septime",  semitones:10, color:"#8B4513",col:"Septime",row:1},
+  gr7:    {name:"gr. Septime",  semitones:11, color:"#9A7B2D",col:"Septime",row:0},
+  oktave: {name:"Oktave",       semitones:12, color:"#C9A84C",col:"Oktave",row:0},
+};
+let activeIntervals={};Object.keys(INTERVALS).forEach(k=>activeIntervals[k]=true);
+
+/* ═══════════════════════════════════════════════
+   MODULE SYSTEM
+   ═══════════════════════════════════════════════ */
+let currentModule="chords"; // "chords" or "intervals"
+let playbackMode="both";
+let currentAnswer=null, currentRoot=null, currentMidi=[];
+
+const MODES=[{key:"successive",label:"Sukzessiv"},{key:"simultaneous",label:"Simultan"},{key:"both",label:"Sukzessiv → Simultan"}];
+
+function getActiveItems(){
+  if(currentModule==="chords") return Object.keys(activeChords).filter(k=>activeChords[k]);
+  return Object.keys(activeIntervals).filter(k=>activeIntervals[k]);
+}
+function getItemData(key){
+  return currentModule==="chords"?CHORDS[key]:INTERVALS[key];
+}
+function getPM(){return playbackMode==="both"?"both-successive":playbackMode;}
+
+function checkStart(){
+  let c;
+  if(currentModule==="rhythm"){
+    c=Object.keys(activeBeats).filter(k=>activeBeats[k]).length;
+    document.getElementById("startBtn").disabled=c<2;
+    document.getElementById("startWarning").style.display=c<2?"":"none";
+  }else{
+    c=getActiveItems().length;
+    document.getElementById("startBtn").disabled=c<2;
+    document.getElementById("startWarning").style.display=c<2?"":"none";
+  }
+}
+
+// ── BUILD CHIPS (Punkt 5: generische Funktion) ──
+function buildChipGroup(containerId, groups, activeMap, dataSource, colorFn, labelMinWidth, onToggle){
+  const container=document.getElementById(containerId);
+  container.innerHTML="";
+  groups.forEach(grp=>{
+    const row=document.createElement("div");
+    row.className="chip-row";
+    const lbl=document.createElement("span");
+    lbl.className="chip-row-label";
+    lbl.style.minWidth=labelMinWidth||"50px";
+    lbl.textContent=grp.label;
+    row.appendChild(lbl);
+    grp.keys.forEach(k=>{
+      const item=dataSource[k];
+      const btn=document.createElement("button");
+      const isActive=activeMap[k];
+      btn.className="chip"+(isActive?" on":"");
+      btn.textContent=item.name||item.id||k;
+      if(isActive){
+        const col=colorFn?colorFn(item):item.color;
+        btn.style.background=col;
+        btn.style.borderColor=col;
+      }else{
+        btn.style.background="";
+        btn.style.borderColor="";
+      }
+      btn.onclick=()=>{activeMap[k]=!activeMap[k];onToggle();};
+      row.appendChild(btn);
+    });
+    container.appendChild(row);
+  });
+}
+
+function buildChordChips(){
+  buildChipGroup("chordChips",
+    [{label:"Dur:",keys:["dur","d7","dmaj7","d56"]},{label:"Moll:",keys:["moll","m7","m56"]},{label:"Sonder:",keys:["verm7","ueber"]}],
+    activeChords, CHORDS, c=>c.color, "50px", ()=>{buildChordChips();checkStart();saveSettings();}
+  );
+}
+function buildIntervalChips(){
+  buildChipGroup("intervalChips",
+    [{label:"Rein:",keys:["prime","r4","r5","oktave"]},{label:"Groß:",keys:["gr2","gr3","gr6","gr7"]},{label:"Klein:",keys:["kl2","kl3","kl6","kl7"]},{label:"",keys:["tri"]}],
+    activeIntervals, INTERVALS, i=>i.color, "50px", ()=>{buildIntervalChips();checkStart();saveSettings();}
+  );
+}
+function buildModes(){
+  const c=document.getElementById("modeChips");c.innerHTML="";
+  MODES.forEach(mo=>{
+    const b=document.createElement("button");
+    const isActive=playbackMode===mo.key;
+    b.className="chip"+(isActive?" on":"");
+    b.textContent=mo.label;
+    if(isActive){
+      b.style.background="var(--gold)";
+      b.style.borderColor="var(--gold)";
+      b.style.color="var(--bg-deep)";
+    }
+    b.onclick=()=>{playbackMode=mo.key;buildModes();saveSettings();};
+    c.appendChild(b);
+  });
+}
+
+function buildAnswers(){
+  const g=document.getElementById("answerGrid");g.innerHTML="";g.className="answer-grid";
+  if(currentModule==="chords"){
+    g.classList.add("chord-grid");
+    const groups=[
+      {label:"Dur",keys:["dur","d7","dmaj7","d56"]},
+      {label:"Moll",keys:["moll","m7","m56"]},
+      {label:"Sonder",keys:["verm7","ueber"]},
+    ];
+    groups.forEach(grp=>{
+      const col=document.createElement("div");col.style.cssText="display:flex;flex-direction:column;gap:8px;";
+      const lbl=document.createElement("div");lbl.className="chord-group-label";lbl.textContent=grp.label;
+      col.appendChild(lbl);
+      grp.keys.forEach(k=>{
+        if(!activeChords[k])return;
+        const ch=CHORDS[k],b=document.createElement("button");
+        b.className="ans-btn";b.textContent=ch.name;
+        b.style.background=ch.color;b.style.borderColor=ch.color;
+        b.onclick=()=>handleAnswer(k);col.appendChild(b);
+      });
+      g.appendChild(col);
+    });
+  }else{
+    g.classList.add("interval-grid");
+    // Build columns: Prime, Sekunde, Terz, Quarte, Tritonus, Quinte, Sexte, Septime, Oktave
+    const colOrder=["Prime","Sekunde","Terz","Quarte","Tritonus","Quinte","Sexte","Septime","Oktave"];
+    const colMap={};
+    Object.keys(INTERVALS).forEach(k=>{
+      const iv=INTERVALS[k];
+      if(!colMap[iv.col])colMap[iv.col]=[];
+      colMap[iv.col].push(k);
+    });
+    colOrder.forEach(colName=>{
+      if(!colMap[colName])return;
+      const keys=colMap[colName].filter(k=>activeIntervals[k]);
+      if(!keys.length)return;
+      const col=document.createElement("div");col.className="interval-col";
+      const lbl=document.createElement("div");lbl.className="interval-col-label";lbl.textContent=colName;
+      col.appendChild(lbl);
+      // Sort: row 0 (groß/rein) first, row 1 (klein) second
+      keys.sort((a,b)=>INTERVALS[a].row-INTERVALS[b].row);
+      keys.forEach(k=>{
+        const iv=INTERVALS[k],b=document.createElement("button");
+        b.className="ans-btn";b.textContent=iv.name;
+        b.style.background=iv.color;b.style.borderColor=iv.color;
+        b.style.fontSize="11px";b.style.padding="10px 6px";b.style.minWidth="68px";
+        b.onclick=()=>handleAnswer(k);col.appendChild(b);
+      });
+      g.appendChild(col);
+    });
+  }
+}
+
+// ── GENERATE NEW QUESTION ──
+function newQuestion(){
+  if(currentModule==="rhythm"){
+    showRhythmQuestion();
+    return;
+  }
+  const keys=getActiveItems();if(keys.length<2)return;
+  const tk=getWeightedRandomKey(keys);
+  const lo=+document.getElementById("rangeLow").value;
+  const hi=+document.getElementById("rangeHigh").value;
+
+  if(currentModule==="chords"){
+    const ch=CHORDS[tk],mx=Math.max(...ch.intervals);
+    const maxRoot=hi-mx; if(maxRoot<lo)return;
+    currentRoot=lo+Math.floor(Math.random()*(maxRoot-lo+1));
+    currentMidi=ch.intervals.map(i=>currentRoot+i);
+  }else{
+    const iv=INTERVALS[tk];
+    const maxRoot=hi-iv.semitones; if(maxRoot<lo)return;
+    currentRoot=lo+Math.floor(Math.random()*(maxRoot-lo+1));
+    currentMidi=[currentRoot, currentRoot+iv.semitones];
+  }
+
+  currentAnswer=tk;
+  buildAnswers();showScreen("listenScreen");
+  playNotes(currentMidi,getPM());
+}
+
+// ── HANDLE ANSWER ──
+let isJokerRound=false;
+
+function handleAnswer(tk){
+  stopAllSound();
+  const ok=tk===currentAnswer;
+
+  if(ok){
+    streak++;
+    isJokerRound=false;
+    playPling();
+    stats.correct++;stats.total++;
+    updateStats();updateStreak();
+    showResult(true, tk);
+    checkReward();
+  }else{
+    // Wrong answer
+    if(isJokerRound){
+      // Already used joker this round, fail for real
+      isJokerRound=false;
+      streak=0;
+      playBuzz();
+      stats.total++;
+      updateStats();updateStreak();
+      showResult(false, tk);
+    }else if(stars>0 && streak>0){
+      // Has stars and has a streak worth saving → offer joker
+      playBuzz();
+      jokerWrongAnswer=tk;
+      document.getElementById("jokerStreakVal").textContent=streak;
+      document.getElementById("useJokerBtn").disabled=false;
+      showScreen("jokerScreen");
+    }else{
+      // No stars or no streak → normal fail
+      streak=0;
+      playBuzz();
+      stats.total++;
+      updateStats();updateStreak();
+      showResult(false, tk);
+    }
+  }
+}
+
+function showResult(correct, chosenKey){
+  const item=getItemData(currentAnswer);
+  const bg=document.getElementById("resultBadge");
+  bg.textContent=correct?"✓ Richtig!":"✗ Leider falsch";
+  bg.style.background=correct?"var(--correct)":"var(--wrong)";
+
+  const rv=document.getElementById("resultReveal");
+  const hb=document.getElementById("hintBox");
+
+  if(!correct){
+    rv.innerHTML='Richtig: <strong style="color:'+item.color+'">'+item.name+'</strong>';
+    rv.style.display="";
+    // Log error and show hint
+    if(chosenKey){
+      logError(currentAnswer, chosenKey);
+      const hint=getHint(currentAnswer, chosenKey);
+      if(hint){
+        hb.innerHTML='<div class="hint-label">💡 Tipp</div>'+hint;
+        hb.style.display="";
+      }else{
+        hb.style.display="none";
+      }
+    }else{
+      hb.style.display="none";
+    }
+    updateErrorStats();
+  }else{
+    rv.style.display="none";
+    hb.style.display="none";
+  }
+
+  if(currentModule==="chords"){
+    const ch=CHORDS[currentAnswer];
+    document.getElementById("resultNotes").textContent="Grundton: "+midiToName(currentRoot)+" — "+ch.intervals.map(i=>midiToName(currentRoot+i)).join(" · ");
+  }else{
+    const iv=INTERVALS[currentAnswer];
+    document.getElementById("resultNotes").textContent=midiToName(currentRoot)+" → "+midiToName(currentRoot+iv.semitones)+" ("+iv.semitones+" Halbtöne)";
+  }
+  showScreen("resultScreen");
+}
+
+function useJoker(){
+  stars--;
+  updateStars();
+  isJokerRound=true;
+  if(currentModule==="rhythm"){
+    resetSlots();
+    buildRhythmPalette();
+    showScreen("rhythmListenScreen");
+    if(currentRhythmMeasure)playRhythm(currentRhythmMeasure);
+  }else{
+    buildAnswers();
+    showScreen("listenScreen");
+    playNotes(currentMidi,getPM());
+  }
+}
+
+function declineJoker(){
+  isJokerRound=false;
+  streak=0;
+  stats.total++;
+  updateStats();updateStreak();
+  showResult(false, jokerWrongAnswer);
+}
+
+/* ═══════════════════════════════════════════════
+   MODULE: RHYTHMUS (VexFlow)
+   ═══════════════════════════════════════════════ */
+
+const BEATS={
+  q:    {id:"q",    beats:1, durations:[1],             vex:[{dur:"q"}]},
+  ee:   {id:"ee",   beats:1, durations:[.5,.5],         vex:[{dur:"8"},{dur:"8"}], beam:true},
+  ess:  {id:"ess",  beats:1, durations:[.5,.25,.25],    vex:[{dur:"8"},{dur:"16"},{dur:"16"}], beam:true},
+  sse:  {id:"sse",  beats:1, durations:[.25,.25,.5],    vex:[{dur:"16"},{dur:"16"},{dur:"8"}], beam:true},
+  ses:  {id:"ses",  beats:1, durations:[.25,.5,.25],    vex:[{dur:"16"},{dur:"8"},{dur:"16"}], beam:true},
+  ssss: {id:"ssss", beats:1, durations:[.25,.25,.25,.25],vex:[{dur:"16"},{dur:"16"},{dur:"16"},{dur:"16"}], beam:true},
+  ds:   {id:"ds",   beats:1, durations:[.75,.25],       vex:[{dur:"8",dot:true},{dur:"16"}], beam:true},
+  trip: {id:"trip", beats:1, durations:[1/3,1/3,1/3],   vex:[{dur:"8"},{dur:"8"},{dur:"8"}], beam:true, triplet:true},
+  syn:  {id:"syn",  beats:2, durations:[.5,1,.5],       vex:[{dur:"8"},{dur:"q"},{dur:"8"}], twobeat:true},
+  half: {id:"half", beats:2, durations:[2],             vex:[{dur:"h"}], twobeat:true},
+  dqe:  {id:"dqe",  beats:2, durations:[1.5,.5],        vex:[{dur:"q",dot:true},{dur:"8"}], twobeat:true},
+  dqss: {id:"dqss", beats:2, durations:[1.5,.25,.25],   vex:[{dur:"q",dot:true},{dur:"16"},{dur:"16"}], twobeat:true, beamLast:2},
+};
+
+let activeBeats={};Object.keys(BEATS).forEach(k=>activeBeats[k]=true);
+
+// Slot state: array of beat IDs placed by user, null = empty
+// For 2-beat blocks: they occupy two consecutive slots
+let rhythmSlots=[null,null,null,null];
+let currentRhythmMeasure=null; // correct answer: array of beat IDs
+
+// ── VexFlow Rendering ──
+const VF=(function(){
+  try{
+    if(typeof Vex!=="undefined" && Vex.Flow) return Vex.Flow;
+    if(typeof VexFlow!=="undefined") return VexFlow;
+  }catch(e){}
+  return null;
+})();
+
+// Punkt 6: SVG-Fix-Hilfsfunktion extrahiert
+function fixSvgDisplay(div, w, h){
+  const svgEl=div.querySelector("svg");
+  if(svgEl){
+    svgEl.setAttribute("viewBox","0 0 "+w+" "+h);
+    svgEl.style.width="100%";
+    svgEl.style.height="auto";
+    svgEl.querySelectorAll("*").forEach(el=>{
+      if(el.getAttribute("fill")&&el.getAttribute("fill")!=="none") el.setAttribute("fill","#000");
+      if(el.getAttribute("stroke")&&el.getAttribute("stroke")!=="none") el.setAttribute("stroke","#000");
+    });
+  }
+}
+
+function renderBeatToDiv(div, beatId, width, height){
+  if(!VF){div.innerHTML='<span style="color:#999;font-size:10px">♩</span>';return;}
+  try{
+  div.innerHTML="";
+  const w=width||100, h=height||80;
+  const renderer=new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(w,h);
+  const ctx=renderer.getContext();
+  ctx.setFont("Arial",8);
+
+  const beat=BEATS[beatId];
+  const notes=beat.vex.map(v=>{
+    const n=new VF.StaveNote({keys:["g/4"],duration:v.dur,stem_direction:1,clef:"treble"});
+    if(v.dot) VF.Dot.buildAndAttach([n]);
+    return n;
+  });
+
+  let beamObj=null; // Punkt 13: var→let
+  if(beat.beam && notes.length>1){
+    try{
+      const beamNotes=beat.beamLast?notes.slice(-beat.beamLast):notes;
+      beamObj=new VF.Beam(beamNotes);
+    }catch(e){}
+  }
+
+  let tupletObj=null;
+  if(beat.triplet){
+    tupletObj=new VF.Tuplet(notes,{num_notes:3,notes_occupied:2});
+  }
+
+  const staveW=w-4;
+  const stave=new VF.Stave(2,-2,staveW);
+  stave.setContext(ctx).draw();
+
+  const voice=new VF.Voice({num_beats:beat.beats, beat_value:4}).setStrict(false);
+  voice.addTickables(notes);
+
+  new VF.Formatter().joinVoices([voice]).format([voice],staveW-20);
+  voice.draw(ctx,stave);
+  if(beamObj)beamObj.setContext(ctx).draw();
+  if(tupletObj)tupletObj.setContext(ctx).draw();
+
+  fixSvgDisplay(div, w, h);
+  }catch(e){div.innerHTML='<span style="color:#999;font-size:10px">♩</span>';}
+}
+
+function renderMeasureToDiv(div, beatIds, width, height){
+  if(!VF){div.textContent="Notendarstellung nicht verfügbar";return;}
+  try{
+  div.innerHTML="";
+  const w=width||500, h=height||110;
+  const renderer=new VF.Renderer(div, VF.Renderer.Backends.SVG);
+  renderer.resize(w,h);
+  const ctx=renderer.getContext();
+  ctx.setFont("Arial",9);
+
+  const stave=new VF.Stave(2,0,w-6);
+  stave.addClef("treble");
+  stave.addTimeSignature("4/4");
+  stave.setContext(ctx).draw();
+
+  const allNotes=[];
+  const beams=[];
+  const tuplets=[];
+
+  beatIds.forEach(bid=>{
+    const beat=BEATS[bid];
+    const notes=beat.vex.map(v=>{
+      const n=new VF.StaveNote({keys:["g/4"],duration:v.dur,stem_direction:1,clef:"treble"});
+      if(v.dot) VF.Dot.buildAndAttach([n]);
+      return n;
+    });
+    allNotes.push(...notes);
+
+    if(beat.beam && notes.length>1){
+      try{
+        const beamNotes=beat.beamLast?notes.slice(-beat.beamLast):notes;
+        beams.push(new VF.Beam(beamNotes));
+      }catch(e){}
+    }
+    if(beat.triplet){
+      tuplets.push(new VF.Tuplet(notes,{num_notes:3,notes_occupied:2}));
+    }
+  });
+
+  const voice=new VF.Voice({num_beats:4,beat_value:4}).setStrict(false);
+  voice.addTickables(allNotes);
+  new VF.Formatter().joinVoices([voice]).format([voice],w-80);
+  voice.draw(ctx,stave);
+  beams.forEach(b=>b.setContext(ctx).draw());
+  tuplets.forEach(t=>t.setContext(ctx).draw());
+
+  // Punkt 6: SVG-Fix-Hilfsfunktion nutzen
+  fixSvgDisplay(div, w, h);
+  const svgEl=div.querySelector("svg");
+  if(svgEl) svgEl.style.maxWidth=w+"px";
+  }catch(e){div.textContent="Notendarstellung nicht verfügbar";}
+}
+
+// ── Slot Management ──
+function resetSlots(){
+  rhythmSlots=[null,null,null,null];
+  renderSlots();
+  document.getElementById("rhythmCheckBtn").style.display="none";
+}
+
+function addBeatToSlots(beatId){
+  const beat=BEATS[beatId];
+  if(beat.beats===2){
+    // Find first pair of empty adjacent slots at pos 0 or 2
+    for(let pos of [0,2]){
+      if(rhythmSlots[pos]===null && rhythmSlots[pos+1]===null){
+        rhythmSlots[pos]=beatId;
+        rhythmSlots[pos+1]="__double__"; // placeholder for second half
+        break;
+      }
+    }
+  }else{
+    const idx=rhythmSlots.indexOf(null);
+    if(idx>=0) rhythmSlots[idx]=beatId;
+  }
+  renderSlots();
+  checkSlotsComplete();
+}
+
+function removeSlot(idx){
+  if(rhythmSlots[idx]==="__double__"){
+    // Find the owner (previous slot)
+    if(idx>0 && rhythmSlots[idx-1]!==null && rhythmSlots[idx-1]!=="__double__"){
+      const bid=rhythmSlots[idx-1];
+      if(BEATS[bid] && BEATS[bid].beats===2){
+        rhythmSlots[idx-1]=null;
+        rhythmSlots[idx]=null;
+      }
+    }
+  }else if(rhythmSlots[idx]!==null){
+    const bid=rhythmSlots[idx];
+    if(BEATS[bid] && BEATS[bid].beats===2){
+      rhythmSlots[idx]=null;
+      if(idx+1<4) rhythmSlots[idx+1]=null;
+    }else{
+      rhythmSlots[idx]=null;
+    }
+  }
+  renderSlots();
+  document.getElementById("rhythmCheckBtn").style.display="none";
+}
+
+function renderSlots(){
+  const area=document.getElementById("rhythmSlotArea");
+  area.innerHTML="";
+  let i=0;
+  while(i<4){
+    const bid=rhythmSlots[i];
+    const div=document.createElement("div");
+    const currentIdx=i; // Punkt 8: let-Variable für Closure statt IIFE
+
+    if(bid===null){
+      div.className="rhythm-slot empty";
+      div.dataset.slot=i;
+      div.innerHTML="<span>?</span>";
+      // Punkt 8: Arrow-Function nutzt Block-Scope von currentIdx
+      div.onclick=()=>{/* empty slot – do nothing */};
+      area.appendChild(div);
+      i++;
+    }else if(bid==="__double__"){
+      // skip – already rendered by previous slot
+      i++;
+    }else{
+      const beat=BEATS[bid];
+      const currentBid=bid; // Punkt 8: für setTimeout-Closure
+      if(beat && beat.beats===2){
+        div.className="rhythm-slot filled double";
+        div.dataset.slot=i;
+        div.innerHTML='<span class="slot-x">✕</span>';
+        const renderDiv=document.createElement("div");
+        renderDiv.className="slot-render-div"; // Punkt 7: CSS-Klasse
+        div.appendChild(renderDiv);
+        div.onclick=()=>removeSlot(currentIdx); // Punkt 8: Arrow
+        area.appendChild(div);
+        setTimeout(()=>renderBeatToDiv(renderDiv,currentBid,140,90),10); // Punkt 8: Arrow
+        i+=2;
+      }else{
+        div.className="rhythm-slot filled";
+        div.dataset.slot=i;
+        div.innerHTML='<span class="slot-x">✕</span>';
+        const renderDiv=document.createElement("div");
+        renderDiv.className="slot-render-div"; // Punkt 7: CSS-Klasse
+        div.appendChild(renderDiv);
+        div.onclick=()=>removeSlot(currentIdx); // Punkt 8: Arrow
+        area.appendChild(div);
+        setTimeout(()=>renderBeatToDiv(renderDiv,currentBid,90,90),10); // Punkt 8: Arrow
+        i++;
+      }
+    }
+  }
+}
+
+function checkSlotsComplete(){
+  const filled=rhythmSlots.every(s=>s!==null);
+  const btn=document.getElementById("rhythmCheckBtn");
+  if(filled){
+    btn.style.display="";
+    btn.disabled=false;
+  }else{
+    btn.style.display="none";
+  }
+}
+
+function getUserMeasure(){
+  // Extract beat IDs from slots (skip __double__ placeholders)
+  return rhythmSlots.filter(s=>s!==null && s!=="__double__");
+}
+
+// ── Palette ──
+function buildRhythmPalette(){
+  const pal=document.getElementById("rhythmPalette");
+  pal.innerHTML="";
+  const groups=[
+    {label:"1 Schlag",keys:["q","ee","ess","sse","ses","ssss","ds","trip"]},
+    {label:"2 Schläge",keys:["syn","half","dqe","dqss"]},
+  ];
+  groups.forEach(grp=>{
+    const activeKeys=grp.keys.filter(k=>activeBeats[k]);
+    if(!activeKeys.length)return;
+    const group=document.createElement("div");group.className="rhythm-palette-group";
+    const lbl=document.createElement("div");lbl.className="rhythm-palette-label";lbl.textContent=grp.label;
+    group.appendChild(lbl);
+    const row=document.createElement("div");row.className="rhythm-palette-row";
+    activeKeys.forEach(k=>{
+      const block=document.createElement("div");block.className="rhythm-block";
+      block.dataset.beat=k;
+      block.onclick=function(){addBeatToSlots(k);};
+      row.appendChild(block);
+      setTimeout(function(){renderBeatToDiv(block,k,BEATS[k].beats===2?140:90,82);},10);
+    });
+    group.appendChild(row);
+    pal.appendChild(group);
+  });
+}
+
+// ── Rhythm Playback ──
+async function playRhythm(measure){
+  stopAllSound();
+  const ctx=await ensureAudioReady(); // iOS-Fix: Audio sicherstellen
+  const bpm=+document.getElementById("bpmSlider").value;
+  const beatDur=60/bpm;
+  const events=[];
+  let t=0;
+  measure.forEach(bid=>{
+    BEATS[bid].durations.forEach(d=>{
+      events.push({time:t,duration:d});
+      t+=d;
+    });
+  });
+  const now=ctx.currentTime+0.1;
+  // Count-in: 4 clicks
+  for(let i=0;i<4;i++){
+    const ct=now+i*beatDur;
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.type="sine";o.frequency.value=i===0?1000:800;
+    g.gain.setValueAtTime(.15,ct);g.gain.exponentialRampToValueAtTime(.001,ct+.08);
+    o.connect(g);g.connect(ctx.destination);o.start(ct);o.stop(ct+.08);
+  }
+  const startTime=now+4*beatDur;
+  isPlaying=true;
+  const ri=document.getElementById("rhythmListenIcon");
+  if(ri){ri.textContent="🔊";ri.classList.add("playing");}
+  const rt=document.getElementById("rhythmListenText");
+  if(rt)rt.textContent="Höre den Rhythmus …";
+
+  events.forEach(ev=>{
+    const et=startTime+ev.time*beatDur;
+    const dur=ev.duration*beatDur*0.75; // shorter for crisp rhythm
+    const onBeat=ev.time%1<0.05||ev.time%1>0.95;
+    const vol=onBeat?1.1:1.0;
+    createPianoNote(ctx,261.63,et,dur,vol,true);
+  });
+
+  const lastEventTime=events.length>0?events[events.length-1].time:0;
+  const lastEventDur=events.length>0?events[events.length-1].duration:0;
+  const musicEndTime=lastEventTime+lastEventDur;
+  const totalMs=(4*beatDur+musicEndTime*beatDur+0.3)*1000;
+  pendingTimeouts.push(setTimeout(()=>{
+    isPlaying=false;
+    if(ri){ri.textContent="👂";ri.classList.remove("playing");}
+    if(rt)rt.textContent="Welcher Rhythmus war das?";
+  },totalMs));
+}
+
+// ── Rhythm Measure Generation ──
+// Basis-Gewichtung für Rhythmus-Bausteine (unabhängig von Fehlern)
+const RHYTHM_BASE_WEIGHTS={
+  // 1 Schlag - häufiger:
+  q:1, ee:1,
+  ssss:2.5, ds:2.5, trip:2.5, sse:2.5, ess:2.5, ses:2.5,
+  // 2 Schläge - seltener:
+  syn:0.4, half:0.4, dqe:0.4,
+  dqss:0.2  // sehr selten
+};
+
+function getWeightedRandomBeat(keys){
+  // Kombiniert Basis-Gewichtung mit Fehler-Gewichtung
+  const weights=keys.map(k=>{
+    const baseWeight=RHYTHM_BASE_WEIGHTS[k]||1;
+    const errorBoost=1+(errorCount.rhythm[k]||0)*2;
+    return baseWeight*errorBoost;
+  });
+  const total=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total;
+  for(let i=0;i<keys.length;i++){
+    r-=weights[i];
+    if(r<=0)return keys[i];
+  }
+  return keys[keys.length-1];
+}
+
+function generateMeasure(){
+  const oneBeats=Object.keys(activeBeats).filter(k=>activeBeats[k]&&BEATS[k].beats===1);
+  const twoBeats=Object.keys(activeBeats).filter(k=>activeBeats[k]&&BEATS[k].beats===2);
+  if(oneBeats.length===0)return null;
+  let measure=[];
+  let pos=0;
+  while(pos<4){
+    // 2-Schlag-Bausteine nur mit 20% Wahrscheinlichkeit (statt 30%)
+    if((pos===0||pos===2)&&twoBeats.length>0&&Math.random()<0.2){
+      measure.push(getWeightedRandomBeat(twoBeats));
+      pos+=2;
+    }else{
+      measure.push(getWeightedRandomBeat(oneBeats));
+      pos+=1;
+    }
+  }
+  return measure;
+}
+
+// ── Rhythm Quiz Flow ──
+function showRhythmQuestion(){
+  currentRhythmMeasure=generateMeasure();
+  if(!currentRhythmMeasure)return;
+  resetSlots();
+  buildRhythmPalette();
+  showScreen("rhythmListenScreen");
+  document.getElementById("rhythmCheckBtn").style.display="none";
+  playRhythm(currentRhythmMeasure);
+}
+
+function handleRhythmCheck(){
+  stopAllSound();
+  const user=getUserMeasure();
+  const correct=currentRhythmMeasure;
+  const ok=user.join(",")===correct.join(",");
+
+  if(ok){
+    streak++;playPling();
+    stats.correct++;stats.total++;
+    isJokerRound=false;
+  }else if(!isJokerRound && stars>0 && streak>0){
+    playBuzz();
+    jokerWrongAnswer="rhythm";
+    document.getElementById("jokerStreakVal").textContent=streak;
+    showScreen("jokerScreen");
+    updateStats();updateStreak();
+    return;
+  }else{
+    if(isJokerRound){isJokerRound=false;}
+    streak=0;playBuzz();
+    stats.total++;
+  }
+  updateStats();updateStreak();
+
+  // Show result
+  const bg=document.getElementById("resultBadge");
+  bg.textContent=ok?"✓ Richtig!":"✗ Leider falsch";
+  bg.style.background=ok?"var(--correct)":"var(--wrong)";
+
+  const rv=document.getElementById("resultReveal");
+  const hb=document.getElementById("hintBox");
+  hb.style.display="none";
+
+  if(!ok){
+    rv.innerHTML='<div style="margin:8px 0;color:var(--text-dim)">Richtige Antwort:</div>';
+    const correctDiv=document.createElement("div");
+    correctDiv.className="result-correct-div"; // Punkt 7: CSS-Klasse
+    rv.appendChild(correctDiv);
+    setTimeout(()=>renderMeasureToDiv(correctDiv,correct,480,110),20); // Punkt 8: Arrow
+    rv.style.display="";
+  }else rv.style.display="none";
+
+  document.getElementById("resultNotes").textContent="";
+  showScreen("resultScreen");
+  if(ok)checkReward();
+}
+
+function buildRhythmChips(){
+  const c=document.getElementById("rhythmChips");c.innerHTML="";
+  const groups=[
+    {label:"1 Schlag:",keys:["q","ee","ess","sse","ses","ssss","ds","trip"]},
+    {label:"2 Schläge:",keys:["syn","half","dqe","dqss"]},
+  ];
+  groups.forEach(grp=>{
+    const row=document.createElement("div");
+    row.className="chip-row"; // Punkt 7: CSS-Klasse
+    const lbl=document.createElement("span");
+    lbl.className="chip-row-label"; // Punkt 7: CSS-Klasse
+    lbl.textContent=grp.label;row.appendChild(lbl);
+    grp.keys.forEach(k=>{
+      const bt=BEATS[k],b=document.createElement("button");
+      b.className="chip"+(activeBeats[k]?" on":"");b.textContent=bt.id;b.style.fontSize="11px";
+      if(activeBeats[k]){b.style.background="var(--gold-dark)";b.style.borderColor="var(--gold-dark)";}
+      else{b.style.background="";b.style.borderColor="";}
+      b.onclick=()=>{activeBeats[k]=!activeBeats[k];buildRhythmChips();checkStart();saveSettings();};
+      row.appendChild(b);
+    });
+    c.appendChild(row);
+  });
+}
+
+// ── TAB SWITCHING ──
+function switchModule(mod){
+  currentModule=mod;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.module===mod));
+  document.getElementById("chordSettings").style.display=mod==="chords"?"":"none";
+  document.getElementById("intervalSettings").style.display=mod==="intervals"?"":"none";
+  document.getElementById("rhythmSettings").style.display=mod==="rhythm"?"":"none";
+  // Show/hide tone range settings (not needed for rhythm)
+  const toneSettings=document.getElementById("rangeLow").closest(".sec");
+  if(toneSettings)toneSettings.style.display=mod==="rhythm"?"none":"";
+  const playbackSettings=document.getElementById("modeChips").closest(".sec");
+  if(playbackSettings)playbackSettings.style.display=mod==="rhythm"?"none":"";
+  // Reset to idle – but keep stars across modules!
+  showScreen("idleScreen");
+  stopAllSound();
+  stats={correct:0,total:0};streak=0;isJokerRound=false;
+  errorCount={chords:{},intervals:{},rhythm:{}};confusionLog={chords:{},intervals:{},rhythm:{}};
+  updateStats();updateStreak();updateStars();updateErrorStats();checkStart();
+}
+
+// ── PUNKT 15: LOCAL STORAGE FÜR EINSTELLUNGEN ──
+const STORAGE_KEY="gehoerbildung_settings";
+
+function saveSettings(){
+  try{
+    const settings={
+      activeChords,
+      activeIntervals,
+      activeBeats,
+      playbackMode,
+      rangeLow:+document.getElementById("rangeLow").value,
+      rangeHigh:+document.getElementById("rangeHigh").value,
+      tempo:+document.getElementById("tempoSlider").value,
+      bpm:+document.getElementById("bpmSlider").value,
+      stars
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
+  }catch(e){/* localStorage nicht verfügbar */}
+}
+
+function loadSettings(){
+  try{
+    const stored=localStorage.getItem(STORAGE_KEY);
+    if(!stored)return;
+    const s=JSON.parse(stored);
+    if(s.activeChords)Object.assign(activeChords,s.activeChords);
+    if(s.activeIntervals)Object.assign(activeIntervals,s.activeIntervals);
+    if(s.activeBeats)Object.assign(activeBeats,s.activeBeats);
+    if(s.playbackMode)playbackMode=s.playbackMode;
+    if(s.rangeLow){
+      document.getElementById("rangeLow").value=s.rangeLow;
+      document.getElementById("lowVal").textContent=midiToName(s.rangeLow);
+    }
+    if(s.rangeHigh){
+      document.getElementById("rangeHigh").value=s.rangeHigh;
+      document.getElementById("highVal").textContent=midiToName(s.rangeHigh);
+    }
+    if(s.tempo){
+      document.getElementById("tempoSlider").value=s.tempo;
+      document.getElementById("tempoVal").textContent=s.tempo+" ms";
+    }
+    if(s.bpm){
+      document.getElementById("bpmSlider").value=s.bpm;
+      document.getElementById("bpmVal").textContent=s.bpm;
+    }
+    if(typeof s.stars==="number")stars=s.stars;
+  }catch(e){/* Fehler beim Laden ignorieren */}
+}
+
+// ── PUNKT 9: MODULARE EVENT-LISTENER ──
+function initTabListeners(){
+  document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchModule(t.dataset.module));
+}
+
+function initSettingsListeners(){
+  document.getElementById("settingsToggle").onclick=function(){
+    const p=document.getElementById("settingsPanel"),o=p.classList.toggle("open");
+    this.textContent=o?"✕ Schließen":"⚙ Einstellungen";
+  };
+  document.getElementById("rangeLow").oninput=function(){
+    document.getElementById("lowVal").textContent=midiToName(+this.value);
+    saveSettings();
+  };
+  document.getElementById("rangeHigh").oninput=function(){
+    document.getElementById("highVal").textContent=midiToName(+this.value);
+    saveSettings();
+  };
+  document.getElementById("tempoSlider").oninput=function(){
+    document.getElementById("tempoVal").textContent=this.value+" ms";
+    saveSettings();
+  };
+  document.getElementById("bpmSlider").oninput=function(){
+    document.getElementById("bpmVal").textContent=this.value;
+    saveSettings();
+  };
+}
+
+function initQuizListeners(){
+  document.getElementById("startBtn").onclick=newQuestion;
+  document.getElementById("replayBtn").onclick=()=>playNotes(currentMidi,getPM());
+  document.getElementById("rhythmReplayBtn").onclick=()=>{if(currentRhythmMeasure)playRhythm(currentRhythmMeasure);};
+  document.getElementById("rhythmCheckBtn").onclick=handleRhythmCheck;
+  document.getElementById("replayResult").onclick=()=>{
+    if(currentModule==="rhythm"){if(currentRhythmMeasure)playRhythm(currentRhythmMeasure);}
+    else playNotes(currentMidi,getPM());
+  };
+  document.getElementById("nextBtn").onclick=newQuestion;
+}
+
+function initJokerListeners(){
+  document.getElementById("useJokerBtn").onclick=useJoker;
+  document.getElementById("declineJokerBtn").onclick=declineJoker;
+}
+
+function initResetListeners(){
+  document.getElementById("resetBtn").onclick=()=>{
+    stats={correct:0,total:0};streak=0;stars=0;
+    errorCount={chords:{},intervals:{},rhythm:{}};
+    confusionLog={chords:{},intervals:{},rhythm:{}};
+    updateStats();updateStreak();updateStars();updateErrorStats();
+    saveSettings();
+  };
+  document.getElementById("rewardClose").onclick=()=>document.getElementById("rewardOverlay").classList.remove("show");
+}
+
+// ── iOS AUDIO SPLASH ──
+function initAudioSplash(){
+  const splash=document.getElementById("audioSplash");
+  const startBtn=document.getElementById("audioStartBtn");
+  
+  // Prüfen ob iOS/Safari
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
+  // Splash nur auf iOS oder wenn AudioContext suspended ist
+  if(!isIOS && !isSafari){
+    // Auf Android/Desktop: Splash sofort ausblenden
+    splash.classList.add("hidden");
+    return;
+  }
+  
+  startBtn.onclick=async function(){
+    // Audio WIRKLICH entsperren mit echtem Sound
+    const ctx=getAudioCtx();
+    
+    // Methode 1: Oscillator (am zuverlässigsten auf iOS)
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    gain.gain.value=0.01; // sehr leise, aber hörbar
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime+0.1);
+    
+    // Methode 2: Resume
+    if(ctx.state==="suspended"){
+      await ctx.resume();
+    }
+    
+    // Warten bis Audio wirklich läuft
+    await new Promise(r=>setTimeout(r,150));
+    
+    // Nochmal prüfen
+    if(ctx.state==="suspended"){
+      await ctx.resume();
+    }
+    
+    audioUnlocked=true;
+    
+    // Splash ausblenden
+    splash.classList.add("hidden");
+  };
+}
+
+// ── INIT ──
+loadSettings(); // Punkt 15: Einstellungen laden
+initAudioSplash(); // iOS Audio Splash
+initTabListeners();
+initSettingsListeners();
+initQuizListeners();
+initJokerListeners();
+initResetListeners();
+buildChordChips();buildIntervalChips();buildRhythmChips();buildModes();checkStart();updateStats();updateStreak();updateStars();
+</script>
+</body>
+</html>
